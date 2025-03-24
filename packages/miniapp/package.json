@@ -1,0 +1,40 @@
+{
+  "name": "@drizzle-api/miniapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:weapp": "taro build --type weapp --watch",
+    "dev:alipay": "taro build --type alipay --watch",
+    "build:weapp": "taro build --type weapp",
+    "build:alipay": "taro build --type alipay"
+  },
+  "dependencies": {
+    "@tarojs/components": "^3.6.23",
+    "@tarojs/helper": "^3.6.23",
+    "@tarojs/plugin-framework-vue3": "^3.6.23",
+    "@tarojs/plugin-platform-alipay": "^3.6.23",
+    "@tarojs/plugin-platform-weapp": "^3.6.23",
+    "@tarojs/runtime": "^3.6.23",
+    "@tarojs/shared": "^3.6.23",
+    "@tarojs/taro": "^3.6.23",
+    "antd-mobile": "^5.34.0",
+    "mobx": "^6.12.0",
+    "mobx-react-lite": "^4.0.5",
+    "vue": "^3.4.15"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.0",
+    "@tarojs/cli": "^3.6.23",
+    "@tarojs/webpack5-runner": "^3.6.23",
+    "@types/webpack-env": "^1.13.6",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "@vue/compiler-sfc": "^3.4.15",
+    "babel-preset-taro": "^3.6.23",
+    "eslint": "^8.12.0",
+    "eslint-config-taro": "^3.6.23",
+    "eslint-plugin-vue": "^8.0.0",
+    "stylelint": "^14.4.0",
+    "typescript": "^4.1.0"
+  }
+} 

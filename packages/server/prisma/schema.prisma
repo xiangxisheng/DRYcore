@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  name      String?
+  email     String?  @unique
+  phone     String?
+  avatar    String?
+  status    Int      @default(1) // 1: 正常, 0: 禁用
+  roles     Role[]   @relation("UserRoles")
+  servers   Server[]
+  domains   Domain[]
+  storages  Storage[]
+  databases Database[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 角色模型
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  users       User[]   @relation("UserRoles")
+  permissions Permission[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 权限模型
+model Permission {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  roles       Role[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 系统配置模型
+model SystemConfig {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 服务器模型
+model Server {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   @default("vps") // vps, dedicated
+  status    String   @default("stopped") // running, stopped, error
+  cpu       Int
+  memory    Int
+  disk      Int
+  bandwidth Int
+  ip        String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 域名模型
+model Domain {
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  status         String   @default("pending") // active, pending, error
+  user           User     @relation(fields: [userId], references: [id])
+  userId         Int
+  dnsRecords     DNSRecord[]
+  sslCertificates SSLCertificate[]
+  websites       Website[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// DNS记录模型
+model DNSRecord {
+  id       Int    @id @default(autoincrement())
+  type     String // A, CNAME, MX, TXT
+  name     String
+  value    String
+  ttl      Int    @default(3600)
+  domain   Domain @relation(fields: [domainId], references: [id])
+  domainId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// SSL证书模型
+model SSLCertificate {
+  id          Int      @id @default(autoincrement())
+  name        String
+  status      String   @default("pending") // active, pending, error
+  expires     DateTime
+  domain      Domain   @relation(fields: [domainId], references: [id])
+  domainId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 存储空间模型
+model Storage {
+  id       Int    @id @default(autoincrement())
+  name     String
+  type     String @default("file") // file, database, backup
+  size     Int    @default(10) // GB
+  used     Int    @default(0)  // MB
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  files    File[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 文件模型
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  size      Int      @default(0) // KB
+  type      String   @default("file") // file, folder
+  mimeType  String?
+  storage   Storage  @relation(fields: [storageId], references: [id])
+  storageId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 数据库模型
+model Database {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   @default("mysql") // mysql, postgresql
+  version   String   @default("8.0")
+  status    String   @default("stopped") // running, stopped
+  size      Int      @default(0) // MB
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  dbUsers   DatabaseUser[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 数据库用户模型
+model DatabaseUser {
+  id          Int      @id @default(autoincrement())
+  username    String
+  password    String
+  permissions String   @default("READ") // READ, WRITE, ALL
+  database    Database @relation(fields: [databaseId], references: [id])
+  databaseId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 网站模型
+model Website {
+  id          Int      @id @default(autoincrement())
+  name        String
+  type        String   @default("static") // static, php, node
+  status      String   @default("stopped") // running, stopped, error
+  domain      Domain   @relation(fields: [domainId], references: [id])
+  domainId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

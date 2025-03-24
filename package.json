@@ -1,0 +1,16 @@
+{
+  "name": "drycore",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=packages/server",
+    "build": "npm run build --workspaces",
+    "generate": "npm run generate --workspace=packages/server",
+    "prisma:generate": "npm run prisma:generate --workspace=packages/server",
+    "prisma:migrate": "npm run prisma:migrate --workspace=packages/server",
+    "prisma:studio": "npm run prisma:studio --workspace=packages/server"
+  }
+} 

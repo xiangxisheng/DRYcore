@@ -1,0 +1,40 @@
+{
+  "name": "@drycore/server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "start": "node dist/index.js",
+    "generate": "ts-node src/generators/drizzle.ts",
+    "generate:client": "ts-node src/generators/client.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "api:docs": "ts-node src/generators/api-docs.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.8.1",
+    "@prisma/client": "^5.10.0",
+    "drizzle-orm": "^0.29.3",
+    "hono": "^4.1.2",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.9.1",
+    "zod": "^3.22.4",
+    "swagger-ui-express": "^5.0.0",
+    "yaml": "^2.3.4",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/bcrypt": "^5.0.2",
+    "esbuild": "^0.20.1",
+    "prisma": "^5.10.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3",
+    "openapi-typescript": "^6.7.4"
+  }
+} 
