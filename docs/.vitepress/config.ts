@@ -22,7 +22,7 @@ export default defineConfig({
     
     // 社交链接
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/xiangxisheng/DrizzleAPI' }
+      { icon: 'github', link: 'https://github.com/xiangxisheng/DRYcore' }
     ],
     
     // 侧边栏配置
@@ -131,7 +131,7 @@ export default defineConfig({
     
     // 编辑链接
     editLink: {
-      pattern: 'https://github.com/xiangxisheng/DrizzleAPI/edit/main/docs/:path',
+      pattern: 'https://github.com/xiangxisheng/DRYcore/edit/main/docs/:path',
       text: '在GitHub上编辑此页'
     },
     

@@ -13,7 +13,7 @@ hero:
       link: /design/overview
     - theme: alt
       text: GitHub
-      link: https://github.com/xiangxisheng/DrizzleAPI
+      link: https://github.com/xiangxisheng/DRYcore
 
 features:
   - icon: 🚀
