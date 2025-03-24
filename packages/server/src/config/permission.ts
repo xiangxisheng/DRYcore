@@ -1,4 +1,9 @@
 import { PermissionConfig } from '../types/permission';
+import { 
+  MODULE, 
+  PERMISSION, 
+  generatePermission 
+} from './module-base';
 
 /**
  * 系统权限配置
@@ -6,107 +11,107 @@ import { PermissionConfig } from '../types/permission';
  */
 export const permissionConfig: PermissionConfig[] = [
   {
-    key: 'system',
-    label: '系统管理',
+    key: MODULE.SYSTEM.key,
+    label: MODULE.SYSTEM.label,
     children: [
       {
-        key: 'user',
-        label: '用户管理',
+        key: MODULE.SYSTEM.children.USER.key,
+        label: MODULE.SYSTEM.children.USER.label,
         permissions: [
-          { key: 'user:view', label: '查看用户' },
-          { key: 'user:create', label: '创建用户' },
-          { key: 'user:update', label: '更新用户' },
-          { key: 'user:delete', label: '删除用户' }
+          generatePermission(MODULE.SYSTEM.children.USER.key, PERMISSION.VIEW, MODULE.SYSTEM.children.USER.label),
+          generatePermission(MODULE.SYSTEM.children.USER.key, PERMISSION.CREATE, MODULE.SYSTEM.children.USER.label),
+          generatePermission(MODULE.SYSTEM.children.USER.key, PERMISSION.UPDATE, MODULE.SYSTEM.children.USER.label),
+          generatePermission(MODULE.SYSTEM.children.USER.key, PERMISSION.DELETE, MODULE.SYSTEM.children.USER.label)
         ]
       },
       {
-        key: 'role',
-        label: '角色管理',
+        key: MODULE.SYSTEM.children.ROLE.key,
+        label: MODULE.SYSTEM.children.ROLE.label,
         permissions: [
-          { key: 'role:view', label: '查看角色' },
-          { key: 'role:create', label: '创建角色' },
-          { key: 'role:update', label: '更新角色' },
-          { key: 'role:delete', label: '删除角色' }
+          generatePermission(MODULE.SYSTEM.children.ROLE.key, PERMISSION.VIEW, MODULE.SYSTEM.children.ROLE.label),
+          generatePermission(MODULE.SYSTEM.children.ROLE.key, PERMISSION.CREATE, MODULE.SYSTEM.children.ROLE.label),
+          generatePermission(MODULE.SYSTEM.children.ROLE.key, PERMISSION.UPDATE, MODULE.SYSTEM.children.ROLE.label),
+          generatePermission(MODULE.SYSTEM.children.ROLE.key, PERMISSION.DELETE, MODULE.SYSTEM.children.ROLE.label)
         ]
       },
       {
-        key: 'permission',
-        label: '权限管理',
+        key: MODULE.SYSTEM.children.PERMISSION.key,
+        label: MODULE.SYSTEM.children.PERMISSION.label,
         permissions: [
-          { key: 'permission:view', label: '查看权限' },
-          { key: 'permission:create', label: '创建权限' },
-          { key: 'permission:update', label: '更新权限' },
-          { key: 'permission:delete', label: '删除权限' }
+          generatePermission(MODULE.SYSTEM.children.PERMISSION.key, PERMISSION.VIEW, MODULE.SYSTEM.children.PERMISSION.label),
+          generatePermission(MODULE.SYSTEM.children.PERMISSION.key, PERMISSION.CREATE, MODULE.SYSTEM.children.PERMISSION.label),
+          generatePermission(MODULE.SYSTEM.children.PERMISSION.key, PERMISSION.UPDATE, MODULE.SYSTEM.children.PERMISSION.label),
+          generatePermission(MODULE.SYSTEM.children.PERMISSION.key, PERMISSION.DELETE, MODULE.SYSTEM.children.PERMISSION.label)
         ]
       },
       {
-        key: 'config',
-        label: '系统配置',
+        key: MODULE.SYSTEM.children.CONFIG.key,
+        label: MODULE.SYSTEM.children.CONFIG.label,
         permissions: [
-          { key: 'config:view', label: '查看配置' },
-          { key: 'config:update', label: '更新配置' }
+          generatePermission(MODULE.SYSTEM.children.CONFIG.key, PERMISSION.VIEW, MODULE.SYSTEM.children.CONFIG.label),
+          generatePermission(MODULE.SYSTEM.children.CONFIG.key, PERMISSION.UPDATE, MODULE.SYSTEM.children.CONFIG.label)
         ]
       }
     ]
   },
   {
-    key: 'server',
-    label: '云服务器',
+    key: MODULE.SERVER.apiKey,
+    label: MODULE.SERVER.label,
     permissions: [
-      { key: 'server:view', label: '查看服务器' },
-      { key: 'server:create', label: '创建服务器' },
-      { key: 'server:update', label: '更新服务器' },
-      { key: 'server:delete', label: '删除服务器' },
-      { key: 'server:reboot', label: '重启服务器' },
-      { key: 'server:shutdown', label: '关闭服务器' },
-      { key: 'server:start', label: '启动服务器' }
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.VIEW, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.CREATE, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.UPDATE, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.DELETE, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.REBOOT, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.SHUTDOWN, MODULE.SERVER.label),
+      generatePermission(MODULE.SERVER.apiKey, PERMISSION.START, MODULE.SERVER.label)
     ]
   },
   {
-    key: 'domain',
-    label: '域名管理',
+    key: MODULE.DOMAIN.key,
+    label: MODULE.DOMAIN.label,
     permissions: [
-      { key: 'domain:view', label: '查看域名' },
-      { key: 'domain:create', label: '创建域名' },
-      { key: 'domain:update', label: '更新域名' },
-      { key: 'domain:delete', label: '删除域名' },
-      { key: 'domain:dns', label: '管理DNS' },
-      { key: 'domain:ssl', label: '管理SSL证书' }
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.VIEW, MODULE.DOMAIN.label),
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.CREATE, MODULE.DOMAIN.label),
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.UPDATE, MODULE.DOMAIN.label),
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.DELETE, MODULE.DOMAIN.label),
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.DNS, MODULE.DOMAIN.label),
+      generatePermission(MODULE.DOMAIN.key, PERMISSION.SSL, MODULE.DOMAIN.label)
     ]
   },
   {
-    key: 'storage',
-    label: '云空间',
+    key: MODULE.STORAGE.key,
+    label: MODULE.STORAGE.label,
     permissions: [
-      { key: 'storage:view', label: '查看存储' },
-      { key: 'storage:create', label: '创建存储' },
-      { key: 'storage:update', label: '更新存储' },
-      { key: 'storage:delete', label: '删除存储' },
-      { key: 'storage:upload', label: '上传文件' },
-      { key: 'storage:download', label: '下载文件' }
+      generatePermission(MODULE.STORAGE.key, PERMISSION.VIEW, MODULE.STORAGE.label),
+      generatePermission(MODULE.STORAGE.key, PERMISSION.CREATE, MODULE.STORAGE.label),
+      generatePermission(MODULE.STORAGE.key, PERMISSION.UPDATE, MODULE.STORAGE.label),
+      generatePermission(MODULE.STORAGE.key, PERMISSION.DELETE, MODULE.STORAGE.label),
+      generatePermission(MODULE.STORAGE.key, PERMISSION.UPLOAD, MODULE.STORAGE.label),
+      generatePermission(MODULE.STORAGE.key, PERMISSION.DOWNLOAD, MODULE.STORAGE.label)
     ]
   },
   {
-    key: 'database',
-    label: '云数据库',
+    key: MODULE.DATABASE.key,
+    label: MODULE.DATABASE.label,
     permissions: [
-      { key: 'database:view', label: '查看数据库' },
-      { key: 'database:create', label: '创建数据库' },
-      { key: 'database:update', label: '更新数据库' },
-      { key: 'database:delete', label: '删除数据库' },
-      { key: 'database:backup', label: '备份数据库' },
-      { key: 'database:restore', label: '恢复数据库' }
+      generatePermission(MODULE.DATABASE.key, PERMISSION.VIEW, MODULE.DATABASE.label),
+      generatePermission(MODULE.DATABASE.key, PERMISSION.CREATE, MODULE.DATABASE.label),
+      generatePermission(MODULE.DATABASE.key, PERMISSION.UPDATE, MODULE.DATABASE.label),
+      generatePermission(MODULE.DATABASE.key, PERMISSION.DELETE, MODULE.DATABASE.label),
+      generatePermission(MODULE.DATABASE.key, PERMISSION.BACKUP, MODULE.DATABASE.label),
+      generatePermission(MODULE.DATABASE.key, PERMISSION.RESTORE, MODULE.DATABASE.label)
     ]
   },
   {
-    key: 'website',
-    label: '云Web站点',
+    key: MODULE.WEBSITE.key,
+    label: MODULE.WEBSITE.label,
     permissions: [
-      { key: 'website:view', label: '查看站点' },
-      { key: 'website:create', label: '创建站点' },
-      { key: 'website:update', label: '更新站点' },
-      { key: 'website:delete', label: '删除站点' },
-      { key: 'website:deploy', label: '部署站点' }
+      generatePermission(MODULE.WEBSITE.key, PERMISSION.VIEW, MODULE.WEBSITE.label),
+      generatePermission(MODULE.WEBSITE.key, PERMISSION.CREATE, MODULE.WEBSITE.label),
+      generatePermission(MODULE.WEBSITE.key, PERMISSION.UPDATE, MODULE.WEBSITE.label),
+      generatePermission(MODULE.WEBSITE.key, PERMISSION.DELETE, MODULE.WEBSITE.label),
+      generatePermission(MODULE.WEBSITE.key, PERMISSION.DEPLOY, MODULE.WEBSITE.label)
     ]
   }
 ]; 
