@@ -337,22 +337,54 @@ DRYcore前端采用分层状态管理策略：
 
 ### Q: 如何处理环境特定的配置?
 
-A: 使用环境变量和`import.meta.env`在不同环境中配置应用：
+A: 根据DRYcore的"统一服务器端入口模式"设计原则，前端配置由服务端统一管理和注入：
 
 ```typescript
 // config.ts
+export function getConfig<T>(key: string, defaultValue?: T): T {
+  if (typeof window === 'undefined' || !window.__APP_CONFIG__) {
+    return defaultValue as T;
+  }
+  return window.__APP_CONFIG__[key] ?? defaultValue;
+}
+
 export const config = {
-  apiUrl: import.meta.env.VITE_API_URL,
-  environment: import.meta.env.MODE,
-  isProduction: import.meta.env.PROD,
-  isDevelopment: import.meta.env.DEV,
+  // 从服务端注入的全局配置中获取API URL
+  apiUrl: getConfig('apiUrl', ''),
+  environment: getConfig('environment', 'development'),
+  isProduction: getConfig('environment', '') === 'production',
+  isDevelopment: getConfig('environment', '') === 'development',
 };
 ```
 
-在`.env`文件中定义环境变量：
+服务端在生成HTML页面时会注入配置：
 
+```html
+<!-- 服务端生成的HTML示例 -->
+<script>
+window.__APP_CONFIG__ = {
+  apiUrl: "https://api.example.com",
+  environment: "production",
+  appName: "feieryun",
+  appType: "admin"
+  // 其他配置...
+};
+</script>
 ```
-VITE_API_URL=https://api.example.com
+
+API客户端使用服务端注入的配置：
+
+```typescript
+// api-client.ts
+import { getConfig } from '@/utils/config';
+
+export function createApiClient() {
+  const apiUrl = getConfig('apiUrl', '');
+  return axios.create({
+    baseURL: apiUrl,
+    // 其他配置...
+  });
+}
 ```
 
 ### Q: 如何实现权限控制?
