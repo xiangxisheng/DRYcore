@@ -4,16 +4,22 @@
 
 ```
 docs/
-├── design/         # 设计文档（无代码示例）
+├── design/           # 设计文档（无代码示例）
 │   └── overview.md   # 框架设计概述
-├── detailed/       # 详细文档（含代码示例）
+├── detailed/         # 详细文档（含代码示例）
 │   ├── setup/        # 快速开始相关文档
-│   └── api_driven.md # API驱动开发详解
-├── api/            # API参考文档
+│   │   ├── init.md     # 项目初始化
+│   │   ├── paths.md    # 路径别名配置
+│   │   └── env.md      # 环境配置
+│   ├── testing/       # 测试相关文档
+│   │   └── strategy.md # 测试策略
+│   ├── multi_platform.md # 多端适配详解
+│   └── api_driven.md  # API驱动开发详解
+├── api/              # API参考文档
 │   └── README.md     # API文档索引
-├── apps/           # 应用文档索引（指向应用目录下的文档）
+├── apps/             # 应用文档索引（指向应用目录下的文档）
 │   └── README.md     # 应用文档列表
-└── CONTRIBUTING.md # 文档贡献指南
+└── CONTRIBUTING.md   # 文档贡献指南
 ```
 
 ## 文档分类
@@ -23,9 +29,15 @@ docs/
    - 开发理念
    - 技术选型
    - 目录结构
+   - 环境配置
+   - 多端适配
+   - 测试体系
 
 2. **详细实现文档**：[detailed/README.md](detailed/README.md)
    - [API驱动开发](detailed/api_driven.md) - API驱动开发的详细实现和示例代码
+   - [多端适配](detailed/multi_platform.md) - 多端适配的具体实现和使用方法
+   - [环境配置](detailed/setup/env.md) - 环境变量配置和多环境支持
+   - [测试策略](detailed/testing/strategy.md) - 测试体系设计和实现
    - 包含代码示例的详细技术文档
 
 3. **应用文档**：[apps/README.md](apps/README.md)

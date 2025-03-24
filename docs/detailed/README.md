@@ -1,67 +1,49 @@
-# DRYcore 详细技术文档
+# DRYcore 详细文档
 
-本目录包含 DRYcore 框架的详细技术文档，重点说明如何利用配置驱动的方式快速开发应用。所有文档均包含代码示例，便于开发者参考实现。
+这里包含DRYcore框架的详细技术文档，包括具体实现方法和代码示例。
 
-## 文档索引
-
-### 核心技术文档
-
-- [API驱动开发详解](api_driven.md) - 深入讲解API驱动开发的实现方式
-  - 数据模型定义与转换
-  - API配置与路由注册
-  - 前端组件自动生成
-  - 路径别名最佳实践
+## 目录
 
 ### 快速开始
 
-- [项目初始化](setup/init.md)
-- [数据模型定义](setup/schema.md)
-- [API 配置](setup/api.md)
-- [代码生成](setup/generate.md)
+- [项目初始化](./setup/init.md)
+- [路径别名配置](./setup/paths.md)
+- [环境配置](./setup/env.md)
 
-### 待完成文档
+### 核心概念
 
-下列文档计划逐步完善：
+- [API驱动开发](./api_driven.md)
+- [配置驱动开发](./config_driven.md)
+- [多端适配](./multi_platform.md)
 
-1. **数据模型**
-   - Schema 语法
-   - 字段类型
-   - 关系定义
-   - 索引和约束
+### 后端实现
 
-2. **API 配置**
-   - 路由配置
-   - 字段映射
-   - 验证规则
-   - 权限控制
+- [服务器架构](./backend/architecture.md)
+- [数据模型定义](./backend/data_model.md)
+- [路由系统](./backend/routing.md)
+- [中间件](./backend/middleware.md)
 
-3. **代码生成**
-   - ORM 代码
-   - API 路由
-   - 类型定义
-   - 自定义生成
+### 前端实现
 
-## 文档编写规范
+- [前端架构](./frontend/architecture.md)
+- [组件系统](./frontend/components.md)
+- [状态管理](./frontend/state.md)
+- [主题与样式](./frontend/styling.md)
 
-1. 每个文档应包含：
-   - 功能说明
-   - 配置示例
-   - 生成结果
-   - 使用说明
+### 测试指南
 
-2. 示例代码应包含：
-   - 完整的配置示例
-   - 生成的代码示例
-   - 使用方式
-   - 注意事项
+- [测试策略](./testing/strategy.md)
+- [单元测试](./testing/unit.md)
+- [集成测试](./testing/integration.md)
+- [端到端测试](./testing/e2e.md)
 
-3. 文档组织原则：
-   - 从配置到生成
-   - 从基础到高级
-   - 从通用到特定
-   - 从简单到复杂
-   
-4. 遵循DRY原则：
-   - 不重复框架设计文档中已有的内容
-   - 专注于具体实现细节和代码示例
-   - 通过引用关联相关内容 
+### 部署与运维
+
+- [开发环境部署](./deployment/development.md)
+- [生产环境部署](./deployment/production.md)
+- [容器化部署](./deployment/containers.md)
+- [监控与日志](./deployment/monitoring.md)
+
+## 文档贡献
+
+如果您想为本文档做出贡献，请参阅[贡献指南](../CONTRIBUTING.md)。 
