@@ -11,7 +11,13 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@core/*": ["src/core/*"],
+      "@config/*": ["src/config/*"],
+      "@apps/*": ["src/apps/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@generators/*": ["src/generators/*"]
     }
   },
   "include": ["src/**/*"],

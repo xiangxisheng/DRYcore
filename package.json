@@ -1,16 +1,28 @@
 {
   "name": "drycore",
   "version": "1.0.0",
+  "description": "基于DRY原则的全栈开发框架",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
-    "dev": "npm run dev --workspace=packages/server",
-    "build": "npm run build --workspaces",
-    "generate": "npm run generate --workspace=packages/server",
-    "prisma:generate": "npm run prisma:generate --workspace=packages/server",
-    "prisma:migrate": "npm run prisma:migrate --workspace=packages/server",
-    "prisma:studio": "npm run prisma:studio --workspace=packages/server"
+    "dev": "pnpm run dev --filter @drycore/server",
+    "build": "pnpm run build --filter=\"./packages/*\"",
+    "generate": "pnpm run generate --filter @drycore/server",
+    "prisma:generate": "pnpm run prisma:generate --filter @drycore/server",
+    "prisma:migrate": "pnpm run prisma:migrate --filter @drycore/server",
+    "prisma:studio": "pnpm run prisma:studio --filter @drycore/server",
+    "docs:dev": "pnpm run dev --filter docs",
+    "docs:build": "pnpm run build --filter docs",
+    "test": "pnpm run test --filter=\"./packages/*\"",
+    "lint": "pnpm run lint --filter=\"./packages/*\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "pnpm run clean --filter=\"./packages/*\""
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
   }
 } 
