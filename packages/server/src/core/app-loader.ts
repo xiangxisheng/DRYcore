@@ -1,7 +1,19 @@
+import { Context } from 'hono';
 import { Hono } from 'hono';
+import * as fs from 'fs';
+import * as path from 'path';
 import { getDomainAppType } from '../config/domain';
 import { AppModule } from '../types/app';
 import { registerConfig } from './controllers/config.controller';
+
+// 环境变量类型定义
+declare const __dirname: string;
+declare const process: {
+  env: {
+    NODE_ENV: string;
+    [key: string]: string | undefined;
+  };
+};
 
 interface Context {
   req: {
@@ -40,7 +52,7 @@ export function registerApp(server: Hono, app: AppModule): void {
     
     // 加载并注册权限配置（无论端类型）
     try {
-      const permissionsConfig = require(`../apps/${appName}/shared/config/permissions`).feieryunPermissionConfig;
+      const permissionsConfig = require(`../apps/${appName}/shared/config/permissions`).permissionConfig;
       registerConfig(appName, 'permissions', permissionsConfig);
       console.log(`已加载${appName}权限配置:`, permissionsConfig.length);
     } catch (err) {
@@ -79,27 +91,54 @@ export async function loadAllApps(server: Hono): Promise<void> {
   try {
     console.log('自动加载应用...');
     
-    // 加载飞儿云管理端应用
-    const feieryunAdminApp = (await import('../apps/feieryun/admin')).default;
-    registerApp(server, feieryunAdminApp);
+    // 读取应用目录
+    const fs = require('fs');
+    const path = require('path');
+    const appsDir = path.join(__dirname, '../apps');
     
-    // 加载飞儿云客户端应用
-    try {
-      const feieryunClientApp = (await import('../apps/feieryun/client/index')).default;
-      registerApp(server, feieryunClientApp);
-    } catch (err: any) {
-      console.warn('加载飞儿云客户端应用失败:', err.message);
+    // 检查是否为开发环境，开发环境下手动加载飞儿云应用
+    if (process.env.NODE_ENV === 'development') {
+      // 开发环境下手动加载应用
+      // 加载飞儿云管理端应用
+      const feieryunAdminApp = (await import('../apps/feieryun/admin')).default;
+      registerApp(server, feieryunAdminApp);
+      
+      // 加载飞儿云客户端应用
+      try {
+        const feieryunClientApp = (await import('../apps/feieryun/client/index')).default;
+        registerApp(server, feieryunClientApp);
+      } catch (err: any) {
+        console.warn('加载飞儿云客户端应用失败:', err.message);
+      }
+    } else {
+      // 生产环境下动态读取并加载所有应用
+      try {
+        const appFolders = fs.readdirSync(appsDir);
+        
+        for (const appName of appFolders) {
+          const appPath = path.join(appsDir, appName);
+          if (fs.statSync(appPath).isDirectory()) {
+            // 尝试加载管理端应用
+            try {
+              const adminApp = (await import(`../apps/${appName}/admin`)).default;
+              registerApp(server, adminApp);
+            } catch (err) {
+              console.warn(`加载${appName}管理端应用失败`);
+            }
+            
+            // 尝试加载客户端应用
+            try {
+              const clientApp = (await import(`../apps/${appName}/client/index`)).default;
+              registerApp(server, clientApp);
+            } catch (err) {
+              console.warn(`加载${appName}客户端应用失败`);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('动态加载应用失败:', err);
+      }
     }
-    
-    // 未来应该动态加载所有应用
-    // TODO: 扫描apps目录，自动加载所有应用
-    // const appModules = await Promise.all([
-    //   import('../apps/feieryun/admin').then(m => m.default),
-    //   import('../apps/feieryun/client').then(m => m.default),
-    //   // 其他应用...
-    // ]);
-    // 
-    // appModules.forEach(app => registerApp(server, app));
     
     console.log('应用加载完成');
   } catch (error) {

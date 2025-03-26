@@ -6,10 +6,10 @@ import {
 } from '@/config/module-base';
 
 /**
- * 飞儿云应用权限配置
+ * 应用权限配置
  * 基于模块基础配置生成
  */
-export const feieryunPermissionConfig: PermissionConfig[] = [
+export const permissionConfig: PermissionConfig[] = [
   {
     key: MODULE.SYSTEM.key,
     label: MODULE.SYSTEM.label,
@@ -114,4 +114,7 @@ export const feieryunPermissionConfig: PermissionConfig[] = [
       generatePermission(MODULE.WEBSITE.key, PERMISSION.DEPLOY, MODULE.WEBSITE.label)
     ]
   }
-]; 
+];
+
+// 兼容旧代码的导出，后续应该移除
+export const feieryunPermissionConfig = permissionConfig; 
