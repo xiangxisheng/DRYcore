@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
 import { UserOutlined, CloudServerOutlined, GlobalOutlined, DatabaseOutlined } from '@ant-design/icons';
 
-import StatisticCard from '../../../components/StatisticCard';
-import SystemInfo from '../../../components/SystemInfo';
-import ActivityLog from '../../../components/ActivityLog';
-import { fetchDashboardData, fetchSystemStatus, DashboardData, SystemStatus } from '../../../api/dashboard';
-import { fetchActivities } from '../../../api/config';
+import StatisticCard from '@/components/StatisticCard';
+import SystemInfo from '@/components/SystemInfo';
+import ActivityLog from '@/components/ActivityLog';
+import { fetchDashboardData, fetchSystemStatus, DashboardData, SystemStatus } from '@/api/dashboard';
+import { fetchActivities } from '@/api/config';
 
 const Dashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);

@@ -2,8 +2,8 @@ import { Context } from 'hono';
 import { Hono } from 'hono';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getDomainAppType } from '../config/domain';
-import { AppModule } from '../types/app';
+import { getDomainAppType } from '@/config/domain';
+import { AppModule } from '@/types/app';
 import { registerConfig } from './controllers/config.controller';
 
 // 环境变量类型定义
@@ -40,19 +40,19 @@ export function registerApp(server: Hono, app: AppModule): void {
   try {
     if (app.type === 'admin') {
       // 加载并注册管理后台菜单
-      const adminMenuConfig = require(`../apps/${appName}/admin/config/menu`).adminMenuConfig;
+      const adminMenuConfig = require(`@/apps/${appName}/admin/config/menu`).adminMenuConfig;
       registerConfig(appName, 'admin.menus', adminMenuConfig);
       console.log(`已加载${appName}管理后台菜单配置:`, adminMenuConfig.length);
     } else if (app.type === 'client') {
       // 加载并注册客户端菜单
-      const clientMenuConfig = require(`../apps/${appName}/client/config/menu`).clientMenuConfig;
+      const clientMenuConfig = require(`@/apps/${appName}/client/config/menu`).clientMenuConfig;
       registerConfig(appName, 'client.menus', clientMenuConfig);
       console.log(`已加载${appName}用户前台菜单配置:`, clientMenuConfig.length);
     }
     
     // 加载并注册权限配置（无论端类型）
     try {
-      const permissionsConfig = require(`../apps/${appName}/shared/config/permissions`).permissionConfig;
+      const permissionsConfig = require(`@/apps/${appName}/shared/config/permissions`).permissionConfig;
       registerConfig(appName, 'permissions', permissionsConfig);
       console.log(`已加载${appName}权限配置:`, permissionsConfig.length);
     } catch (err) {
@@ -100,12 +100,12 @@ export async function loadAllApps(server: Hono): Promise<void> {
     if (process.env.NODE_ENV === 'development') {
       // 开发环境下手动加载应用
       // 加载飞儿云管理端应用
-      const feieryunAdminApp = (await import('../apps/feieryun/admin')).default;
+      const feieryunAdminApp = (await import('@/apps/feieryun/admin')).default;
       registerApp(server, feieryunAdminApp);
       
       // 加载飞儿云客户端应用
       try {
-        const feieryunClientApp = (await import('../apps/feieryun/client/index')).default;
+        const feieryunClientApp = (await import('@/apps/feieryun/client/index')).default;
         registerApp(server, feieryunClientApp);
       } catch (err: any) {
         console.warn('加载飞儿云客户端应用失败:', err.message);
@@ -120,7 +120,7 @@ export async function loadAllApps(server: Hono): Promise<void> {
           if (fs.statSync(appPath).isDirectory()) {
             // 尝试加载管理端应用
             try {
-              const adminApp = (await import(`../apps/${appName}/admin`)).default;
+              const adminApp = (await import(`@/apps/${appName}/admin`)).default;
               registerApp(server, adminApp);
             } catch (err) {
               console.warn(`加载${appName}管理端应用失败`);
@@ -128,7 +128,7 @@ export async function loadAllApps(server: Hono): Promise<void> {
             
             // 尝试加载客户端应用
             try {
-              const clientApp = (await import(`../apps/${appName}/client/index`)).default;
+              const clientApp = (await import(`@/apps/${appName}/client/index`)).default;
               registerApp(server, clientApp);
             } catch (err) {
               console.warn(`加载${appName}客户端应用失败`);

@@ -1,11 +1,12 @@
 import { Hono } from 'hono';
+import { Context } from 'hono';
 import { 
   getAdminMenuConfig, 
   getClientMenuConfig, 
   getPermissionConfig, 
   getUserPermissions 
-} from '../core/controllers/config.controller';
-import { authMiddleware } from '../core/middlewares/auth';
+} from '@/core/controllers/config.controller';
+import { authMiddleware } from '@/core/middlewares/auth';
 
 // 创建配置路由
 const configRouter = new Hono();

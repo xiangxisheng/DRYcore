@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton } from 'antd';
-import { fetchAppConfig, AppConfig } from '../api/config';
+import { fetchAppConfig, AppConfig } from '@/api/config';
 
 interface SystemInfoProps {
   title?: string;

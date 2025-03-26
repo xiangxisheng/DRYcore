@@ -140,6 +140,29 @@ const Dashboard = () => {
 };
 ```
 
+### 6. 使用相对路径而非路径别名
+
+**问题描述**：
+在导入模块时使用多级相对路径（如 `../../../module`），而不是配置和使用路径别名。这会导致代码难以维护，尤其是在重构或移动文件时。
+
+错误示例：
+```typescript
+// BAD: 使用深层次相对路径
+import { User } from '../../../types/user';
+import { getConfig } from '../../../../config/app';
+```
+
+**正确做法**：
+- 为常用目录配置路径别名
+- 使用路径别名替代所有包含`../`的相对路径
+- 保持导入路径的清晰和一致
+
+```typescript
+// GOOD: 使用路径别名
+import { User } from '@types/user';
+import { getConfig } from '@config/app';
+```
+
 ## 设计模式建议
 
 ### 1. 注册模式
@@ -244,6 +267,72 @@ export class OAuthStrategy implements AuthStrategy {
 - [ ] 是否遵循了注册模式而非直接导入
 - [ ] 是否有足够的文档说明
 - [ ] 错误处理是否完善
+- [ ] 是否使用路径别名替代了所有相对路径（特别是包含`../`的路径）
+- [ ] 前端是否从API获取所有配置和数据，而非硬编码
+- [ ] 代码是否通过 ESLint 检查，特别是 `import/no-relative-parent-imports` 规则
+
+## 防止 DRY 违规的自动化措施
+
+为确保项目代码始终符合DRY原则，我们实施了以下自动化措施：
+
+### 1. ESLint 强制执行
+
+项目配置了ESLint规则，自动检测和禁止常见的DRY违规：
+
+- `import/no-relative-parent-imports`: 禁止使用相对父路径导入，强制使用路径别名
+- `import/no-duplicates`: 禁止重复导入同一模块
+- `@typescript-eslint/no-duplicate-imports`: 检测并禁止重复导入
+
+### 2. Git Hooks
+
+使用 husky 和 lint-staged 在代码提交前自动检查和修复问题：
+
+```json
+{
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
+```
+
+### 3. CI 流水线检查
+
+CI流水线中添加了专门的步骤检查DRY违规：
+
+```yaml
+jobs:
+  check-dry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check relative imports
+        run: pnpm run lint:paths
+      - name: Run ESLint
+        run: pnpm run lint
+```
+
+### 4. 自动化文档检查
+
+定期运行脚本检查文档是否同步更新：
+
+```bash
+# 检查代码变更后是否更新了相关文档
+function check_docs_updated() {
+  if git diff --name-only HEAD~5..HEAD | grep -q "src/" && 
+     ! git diff --name-only HEAD~5..HEAD | grep -q "docs/"; then
+    echo "Warning: Code changes detected without documentation updates"
+    exit 1
+  fi
+}
+```
 
 ## 测试策略
 

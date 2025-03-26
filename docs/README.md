@@ -40,6 +40,8 @@ docs/
    - [API驱动开发](detailed/api_driven.md) - API驱动开发的详细实现和示例代码
    - [多端适配](detailed/multi_platform.md) - 多端适配的具体实现和使用方法
    - [环境配置](detailed/setup/env.md) - 环境变量配置和多环境支持
+   - [路径别名配置](detailed/setup/paths.md) - ⚠️ 路径别名配置和使用规范（必读）
+   - [代码规范与Linting](detailed/setup/linting.md) - ⚠️ ESLint配置和路径别名强制执行（必读）
    - [测试策略](detailed/testing/strategy.md) - 测试体系设计和实现
    - [配置注册机制](detailed/config-registry.md) - 核心层与应用层解耦的配置注册系统
    - [实现总结](detailed/implementation-summary.md) - 架构改进总结和待解决问题
@@ -105,6 +107,7 @@ pnpm run docs:build
 2. **使用真实代码示例**
    - 文档中的代码示例应该是可执行的
    - 示例应反映当前系统的实际状态
+   - 所有代码示例必须遵循项目规范，包括使用路径别名而非相对路径
    
 3. **添加架构决策记录**
    - 对于重要的架构决策，记录决策原因和影响
