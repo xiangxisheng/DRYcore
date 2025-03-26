@@ -1,8 +1,41 @@
 import { Context } from 'hono';
-import { adminMenuConfig } from '../config/menu-admin';
-import { clientMenuConfig } from '../config/menu-client';
-import { permissionConfig } from '../config/permission';
 import { authMiddleware } from '../middlewares/auth';
+
+// 配置存储对象
+interface ConfigStore {
+  admin: {
+    menus: Record<string, any[]>;
+  };
+  client: {
+    menus: Record<string, any[]>;
+  };
+  permissions: Record<string, any[]>;
+}
+
+// 初始化配置存储
+const configStore: ConfigStore = {
+  admin: { menus: {} },
+  client: { menus: {} },
+  permissions: {}
+};
+
+/**
+ * 注册配置
+ * 允许应用注册自己的配置到系统中
+ */
+export function registerConfig(
+  appName: string,
+  configType: 'admin.menus' | 'client.menus' | 'permissions',
+  config: any[]
+) {
+  if (configType === 'admin.menus') {
+    configStore.admin.menus[appName] = config;
+  } else if (configType === 'client.menus') {
+    configStore.client.menus[appName] = config;
+  } else if (configType === 'permissions') {
+    configStore.permissions[appName] = config;
+  }
+}
 
 /**
  * 获取管理后台菜单配置
@@ -17,6 +50,18 @@ export const getAdminMenuConfig = async (c: Context) => {
       message: '未授权访问'
     }, 401);
   }
+  
+  // 获取应用信息
+  const appInfo = c.get('appInfo');
+  if (!appInfo || !appInfo.app) {
+    return c.json({
+      status: 'error',
+      message: '无效的应用信息'
+    }, 400);
+  }
+  
+  // 获取当前应用的管理菜单配置
+  const menuConfig = configStore.admin.menus[appInfo.app] || [];
   
   // 通过用户权限过滤菜单
   const userPermissions = user.permissions || [];
@@ -50,7 +95,7 @@ export const getAdminMenuConfig = async (c: Context) => {
   };
   
   // 深拷贝菜单并过滤
-  const filteredMenu = JSON.parse(JSON.stringify(adminMenuConfig))
+  const filteredMenu = JSON.parse(JSON.stringify(menuConfig))
     .filter(filterMenuByPermission)
     .sort((a: any, b: any) => a.order - b.order);
   
@@ -74,10 +119,22 @@ export const getClientMenuConfig = async (c: Context) => {
     }, 401);
   }
   
+  // 获取应用信息
+  const appInfo = c.get('appInfo');
+  if (!appInfo || !appInfo.app) {
+    return c.json({
+      status: 'error',
+      message: '无效的应用信息'
+    }, 400);
+  }
+  
+  // 获取当前应用的客户端菜单配置
+  const menuConfig = configStore.client.menus[appInfo.app] || [];
+  
   // 用户前台菜单不需要太复杂的权限过滤，直接返回所有菜单
   return c.json({
     status: 'success',
-    data: clientMenuConfig
+    data: menuConfig
   });
 };
 
@@ -104,9 +161,21 @@ export const getPermissionConfig = async (c: Context) => {
     }, 403);
   }
   
+  // 获取应用信息
+  const appInfo = c.get('appInfo');
+  if (!appInfo || !appInfo.app) {
+    return c.json({
+      status: 'error',
+      message: '无效的应用信息'
+    }, 400);
+  }
+  
+  // 获取当前应用的权限配置
+  const permConfig = configStore.permissions[appInfo.app] || [];
+  
   return c.json({
     status: 'success',
-    data: permissionConfig
+    data: permConfig
   });
 };
 

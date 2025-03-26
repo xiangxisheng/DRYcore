@@ -1,4 +1,4 @@
-# DRYcore
+# DRYcore - 零重复代码的全栈开发框架
 
 <p align="center">
   <strong>零重复代码的全栈开发框架</strong>
@@ -8,55 +8,66 @@
   基于"Don't Repeat Yourself"原则构建的现代化Web应用框架
 </p>
 
-## 简介
+## 项目概述
 
-DRYcore是一个基于"Don't Repeat Yourself"原则的全栈开发框架，旨在通过配置驱动开发的方式，实现零重复代码的目标。它采用统一服务器端入口模式，所有用户请求先由服务端处理，根据域名返回相应的HTML页面，然后动态加载前端JS文件，实现集中式配置管理和多端应用支持。
+DRYcore 是一个专注于消除代码重复的全栈开发框架，通过以下核心设计实现了高效开发：
 
-## 核心特性
+- **核心与应用分离**：框架核心与具体应用解耦，实现真正的可插拔架构
+- **统一配置注册**：所有应用通过统一的配置注册机制进行管理
+- **类型安全**：全面的TypeScript支持，提供端到端的类型安全
+- **自动化加载**：组件、路由和配置的自动化注册和加载
+- **多端一体化**：支持Web、移动端和桌面应用的统一开发
 
-- **零重复代码** - 严格遵循DRY原则，避免在各端重复相同逻辑
-- **多应用支持** - 单一服务器实例支持多个应用，通过域名区分
-- **多端适配** - 支持Web、移动端、桌面端、小程序等多种前端平台
-- **集中式配置** - 所有配置统一在服务端管理，前端通过API获取
-- **基于域名的路由** - 根据域名智能分发到不同应用和端类型
-- **统一技术栈** - 使用Node.js、React、TypeScript等现代技术栈
+## 项目结构
 
-## 架构
-
-DRYcore采用分层架构设计：
-
-- **核心层** - 提供共享功能和基础设施
-- **应用层** - 每个应用独立实现业务逻辑
-- **前端层** - 基于React的多端适配UI
-
-每个应用可以有多种端类型：
-
-- 管理后台(admin)
-- 用户前台(client)
-- 合作伙伴端(partner)
-- 员工端(staff)
-- API端(api)
-- 及其他自定义端类型
+```
+packages/
+├── server/         # 服务端核心框架
+├── web/            # Web客户端框架
+├── mobile/         # 移动端应用框架
+├── miniapp/        # 小程序应用框架
+└── desktop/        # 桌面应用框架
+```
 
 ## 快速开始
 
+DRYcore是一个多包项目，可根据需要选择启动不同的包：
+
 ```bash
-# 安装依赖
-npm install
+# 安装所有依赖
+pnpm install
 
-# 开发环境运行
-npm run dev
+# 启动开发服务器（默认启动server包）
+pnpm run dev
 
-# 构建项目
-npm run build
+# 启动特定包（例如web）
+pnpm run dev --filter @drycore/web
 
-# 启动生产环境
-npm run start
+# 构建整个项目
+pnpm run build
+
+# 启动生产服务器
+pnpm run start
 ```
+
+## 使用指南
+
+1. **创建新应用**：在`packages/server/src/apps`目录下创建新的应用目录
+2. **注册应用配置**：在应用入口文件中使用`registerConfig`注册应用配置（参考`feieryun`应用）
+3. **创建API路由**：在应用目录下创建路由文件并导出路由配置
+4. **启动服务**：运行`pnpm run dev`启动开发服务器
+
+详细教程请参考[快速开始指南](docs/detailed/setup/init.md)。
 
 ## 文档
 
-详细文档请参阅[docs目录](docs/README.md)。
+- [🔍 架构设计文档](docs/design/overview.md) - 框架设计理念和架构说明
+- [📝 详细实现文档](docs/detailed/README.md) - 具体功能模块的实现详情
+- [📊 API文档](docs/api/README.md) - API接口说明
+- [📋 实现记录](docs/implementation-record.md) - 改进记录和实现历史
+- [👥 贡献指南](docs/CONTRIBUTING.md) - 参与项目开发的指南
+
+所有文档均可在[文档中心](docs/README.md)查看。
 
 ## 许可
 

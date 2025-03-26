@@ -8,9 +8,6 @@ import { errorMiddleware } from './middlewares/error';
 import apiRouter from './routes';
 import { setupSwagger } from './utils/swagger';
 import { loadAllApps, domainRoutingMiddleware } from './core/app-loader';
-import { adminMenuConfig } from '@/apps/feieryun/admin/config/menu';
-import { clientMenuConfig } from '@/apps/feieryun/client/config/menu';
-import { feieryunPermissionConfig } from '@/apps/feieryun/shared/config/permissions';
 
 // 创建Hono应用
 const app = new Hono();
@@ -38,11 +35,6 @@ app.get('/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOStri
 
 // 添加API路由
 app.route('/api', apiRouter);
-
-// 在合适的地方注册这些配置
-console.log('已加载飞儿云管理后台菜单配置:', adminMenuConfig.length);
-console.log('已加载飞儿云用户前台菜单配置:', clientMenuConfig.length);
-console.log('已加载飞儿云权限配置:', feieryunPermissionConfig.length);
 
 // 异步启动函数
 async function bootstrap() {

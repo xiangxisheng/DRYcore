@@ -1,9 +1,20 @@
 /**
- * 模块配置类型定义
+ * 模块配置接口
  */
 export interface ModuleConfig {
-  key: string;
+  /** 模块键 */
+  key?: string;
+  
+  /** 管理后台键 */
+  adminKey?: string;
+  
+  /** API键 */
+  apiKey?: string;
+  
+  /** 模块标签 */
   label: string;
+  
+  /** 子模块 */
   children?: Record<string, ModuleConfig>;
 }
 

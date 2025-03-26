@@ -21,7 +21,56 @@ class AuthError extends Error {
   }
 }
 
-export const authMiddleware = (requiredPermissions?: string[]): MiddlewareHandler => {
+// 示例用户数据（实际应用中应从数据库或认证服务获取）
+const DEMO_USERS = {
+  'admin-token': {
+    id: 'admin',
+    username: 'admin',
+    roles: ['admin'],
+    permissions: ['*'] // 管理员拥有所有权限
+  },
+  'user-token': {
+    id: 'user1',
+    username: '普通用户',
+    roles: ['user'],
+    permissions: [
+      'server:view',
+      'domain:view',
+      'storage:view',
+      'database:view'
+    ]
+  }
+};
+
+/**
+ * 认证中间件
+ * 检查请求中的认证信息，并将用户信息添加到上下文中
+ */
+export const authMiddleware = async (c: Context, next: Next) => {
+  // 从请求头获取认证令牌
+  const token = c.req.header('Authorization')?.replace('Bearer ', '') || '';
+  
+  // 检查令牌并获取用户信息
+  // 在实际应用中，这里应该验证JWT令牌或从数据库查询用户信息
+  const user = DEMO_USERS[token];
+  
+  if (user) {
+    // 将用户信息添加到请求上下文
+    c.set('user', user);
+  } else {
+    // 为了演示，如果没有令牌，使用默认游客用户
+    c.set('user', {
+      id: 'guest',
+      username: '游客',
+      roles: ['guest'],
+      permissions: []
+    });
+  }
+  
+  await next();
+};
+
+export const authMiddlewareWithPermissions = (requiredPermissions?: string[]): MiddlewareHandler => {
   return async (c: Context, next: Next) => {
     try {
       // 获取Authorization头

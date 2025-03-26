@@ -16,13 +16,31 @@ export interface PermissionGroup {
 }
 
 /**
+ * 权限项接口
+ */
+export interface PermissionItem {
+  /** 权限键 */
+  key: string;
+  
+  /** 权限标签 */
+  label: string;
+}
+
+/**
  * 权限配置接口
  */
 export interface PermissionConfig {
+  /** 模块键 */
   key: string;
+  
+  /** 模块标签 */
   label: string;
+  
+  /** 权限列表 */
+  permissions?: PermissionItem[];
+  
+  /** 子模块 */
   children?: PermissionConfig[];
-  permissions?: Permission[];
 }
 
 /**
