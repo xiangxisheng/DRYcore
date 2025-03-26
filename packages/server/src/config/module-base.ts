@@ -2,8 +2,11 @@ import { ModuleConfig } from '../types/module';
 
 /**
  * 模块基础配置
- * 集中定义所有模块的基本信息，避免在多处重复定义
+ * 集中定义所有核心模块的基本信息，避免在多处重复定义
  * 遵循DRY原则
+ * 
+ * 注意：应用特定模块应定义在各自的应用目录中，不应在核心层定义
+ * 例如: packages/server/src/apps/feieryun/shared/config/modules.ts
  */
 export const CORE_MODULES = {
   // 系统管理
@@ -32,58 +35,11 @@ export const CORE_MODULES = {
     }
   },
   
-  // 云服务器
-  SERVER: {
-    adminKey: 'cloud-server', // 管理后台使用的key
-    apiKey: 'server',         // 权限和API中使用的key
-    label: '云服务器',
-  },
-  
-  // 域名管理
-  DOMAIN: {
-    key: 'domain',
-    label: '域名管理',
-  },
-  
-  // 云空间
-  STORAGE: {
-    key: 'storage',
-    label: '云空间',
-  },
-  
-  // 云数据库
-  DATABASE: {
-    key: 'database',
-    label: '云数据库',
-  },
-  
-  // 云Web站点
-  WEBSITE: {
-    key: 'website',
-    label: '云Web站点',
-  },
-  
-  // 用户前台特有模块
+  // 用户前台通用模块（仅包含核心系统需要的部分）
   CLIENT: {
     HOME: {
       key: 'home',
       label: '首页',
-    },
-    SERVICES: {
-      key: 'services',
-      label: '我的服务',
-    },
-    MARKET: {
-      key: 'market',
-      label: '服务市场',
-    },
-    BILLS: {
-      key: 'bills',
-      label: '账单管理',
-    },
-    TICKETS: {
-      key: 'tickets',
-      label: '工单中心',
     },
     ACCOUNT: {
       key: 'account',
@@ -96,10 +52,6 @@ export const CORE_MODULES = {
         SECURITY: {
           key: 'security',
           label: '安全设置',
-        },
-        PAYMENT: {
-          key: 'payment',
-          label: '支付方式',
         }
       }
     }
@@ -173,6 +125,20 @@ export function generatePermission(
   };
 }
 
-// 为了保持向后兼容，临时保留MODULE导出但内容与CORE_MODULES相同
-// 在完成迁移后应当移除此导出
-export const MODULE = CORE_MODULES; 
+/**
+ * 为了保持向后兼容，临时保留MODULE导出
+ * 在项目完全迁移到新的注册模式后，应当移除此导出
+ * 
+ * @deprecated 请使用getRegisteredModules()获取模块，而非直接引用此对象
+ */
+export const MODULE = {
+  ...CORE_MODULES,
+  
+  // 以下是为了保持向后兼容的空模块定义
+  // 实际定义已移至各应用目录
+  SERVER: {},
+  DOMAIN: {},
+  STORAGE: {},
+  DATABASE: {},
+  WEBSITE: {}
+}; 
