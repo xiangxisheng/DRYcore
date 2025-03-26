@@ -84,65 +84,50 @@ export function domainRoutingMiddleware() {
 }
 
 /**
- * 自动加载所有应用
+ * 加载所有应用到服务器
  * @param server Hono服务器实例
  */
 export async function loadAllApps(server: Hono): Promise<void> {
-  try {
-    console.log('自动加载应用...');
+  const appsDir = path.join(__dirname, '../apps');
+  
+  // 检查apps目录是否存在
+  if (!fs.existsSync(appsDir)) {
+    console.warn('Apps directory not found:', appsDir);
+    return;
+  }
+  
+  // 获取应用文件夹
+  const appFolders = fs.readdirSync(appsDir);
+  
+  // 遍历所有应用文件夹
+  for (const appName of appFolders) {
+    const appDir = path.join(appsDir, appName);
     
-    // 读取应用目录
-    const fs = require('fs');
-    const path = require('path');
-    const appsDir = path.join(__dirname, '../apps');
-    
-    // 检查是否为开发环境，开发环境下手动加载飞儿云应用
-    if (process.env.NODE_ENV === 'development') {
-      // 开发环境下手动加载应用
-      // 加载飞儿云管理端应用
-      const feieryunAdminApp = (await import('@/apps/feieryun/admin')).default;
-      registerApp(server, feieryunAdminApp);
-      
-      // 加载飞儿云客户端应用
+    // 检查是否为目录
+    if (fs.statSync(appDir).isDirectory()) {
       try {
-        const feieryunClientApp = (await import('@/apps/feieryun/client/index')).default;
-        registerApp(server, feieryunClientApp);
-      } catch (err: any) {
-        console.warn('加载飞儿云客户端应用失败:', err.message);
-      }
-    } else {
-      // 生产环境下动态读取并加载所有应用
-      try {
-        const appFolders = fs.readdirSync(appsDir);
+        // 使用路径别名动态导入应用
+        const appModule = await import(`@/apps/${appName}`);
         
-        for (const appName of appFolders) {
-          const appPath = path.join(appsDir, appName);
-          if (fs.statSync(appPath).isDirectory()) {
-            // 尝试加载管理端应用
-            try {
-              const adminApp = (await import(`@/apps/${appName}/admin`)).default;
-              registerApp(server, adminApp);
-            } catch (err) {
-              console.warn(`加载${appName}管理端应用失败`);
-            }
-            
-            // 尝试加载客户端应用
-            try {
-              const clientApp = (await import(`@/apps/${appName}/client/index`)).default;
-              registerApp(server, clientApp);
-            } catch (err) {
-              console.warn(`加载${appName}客户端应用失败`);
-            }
-          }
+        if (appModule.default && typeof appModule.default.register === 'function') {
+          // 注册应用
+          appModule.default.register(server);
+          console.log(`Successfully loaded app: ${appName}`);
+        } else {
+          console.warn(`App ${appName} does not have a valid register method`);
         }
-      } catch (err) {
-        console.error('动态加载应用失败:', err);
+      } catch (error) {
+        console.error(`Failed to load app ${appName}:`, error);
       }
     }
-    
-    console.log('应用加载完成');
-  } catch (error) {
-    console.error('加载应用失败:', error);
-    throw error;
   }
+  
+  console.log('All applications loaded');
+}
+
+// 导出应用类型定义
+export interface AppModule {
+  name: string;
+  description: string;
+  register: (app: Hono) => void;
 } 

@@ -19,6 +19,16 @@ const configStore: ConfigStore = {
   permissions: {}
 };
 
+// 模块注册存储
+interface ModuleStore {
+  [appName: string]: {
+    [moduleKey: string]: any;
+  };
+}
+
+// 初始化模块存储
+const moduleStore: ModuleStore = {};
+
 /**
  * 注册配置
  * 允许应用注册自己的配置到系统中
@@ -199,4 +209,37 @@ export const getUserPermissions = async (c: Context) => {
       permissions: user.permissions || []
     }
   });
-}; 
+};
+
+/**
+ * 注册应用模块到核心系统
+ * @param appName 应用名称
+ * @param modules 模块定义
+ */
+export function registerModules(appName: string, modules: Record<string, any>): void {
+  if (!moduleStore[appName]) {
+    moduleStore[appName] = {};
+  }
+  
+  // 注册模块定义
+  Object.keys(modules).forEach(moduleKey => {
+    moduleStore[appName][moduleKey] = modules[moduleKey];
+  });
+  
+  console.log(`Registered modules for application: ${appName}`);
+}
+
+/**
+ * 获取已注册的模块定义
+ * @param appName 应用名称，如果为空则返回所有
+ */
+export function getRegisteredModules(appName?: string): any {
+  if (appName) {
+    return moduleStore[appName] || {};
+  }
+  
+  // 返回合并的模块定义
+  return Object.values(moduleStore).reduce((acc, modules) => {
+    return { ...acc, ...modules };
+  }, {});
+} 

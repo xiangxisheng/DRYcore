@@ -5,10 +5,12 @@ import { ModuleConfig } from '../types/module';
  * 集中定义所有模块的基本信息，避免在多处重复定义
  * 遵循DRY原则
  */
-export const MODULE = {
+export const CORE_MODULES = {
   // 系统管理
   SYSTEM: {
     key: 'system',
+    adminKey: 'system', // admin模块的key
+    apiKey: 'system', // API路由的key
     label: '系统管理',
     children: {
       USER: {
@@ -169,4 +171,8 @@ export function generatePermission(
     key: generatePermissionKey(module, action),
     label: actionLabel || `${actionMap[action]}${moduleLabel}`
   };
-} 
+}
+
+// 为了保持向后兼容，临时保留MODULE导出但内容与CORE_MODULES相同
+// 在完成迁移后应当移除此导出
+export const MODULE = CORE_MODULES; 
