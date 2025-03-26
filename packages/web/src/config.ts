@@ -7,13 +7,5 @@ export const API_BASE_URL = import.meta.env.DEV
   ? 'http://localhost:3000/api'
   : '/api';
 
-/**
- * 应用配置
- */
-export const APP_CONFIG = {
-  appName: 'DRYcore框架',
-  version: import.meta.env.VITE_APP_VERSION || 'v0.1.0',
-  environment: import.meta.env.MODE,
-  nodeVersion: 'v16+',
-  database: 'PostgreSQL'
-}; 
+// 不再使用静态配置，改为从API获取
+// 请使用 api/config.ts 中的 fetchAppConfig 获取配置 

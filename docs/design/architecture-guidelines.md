@@ -71,6 +71,75 @@ export function registerConfig(
 - 使用配置或服务注册机制
 - 基于约定优于配置原则设计API
 
+### 5. 前端硬编码配置和数据
+
+**问题描述**：
+在前端代码中硬编码配置信息、固定文本或静态数据，而不是从后端API获取。这违反了DRY原则，因为当配置需要改变时，需要同时修改前端和后端代码。
+
+错误示例：
+```typescript
+// BAD: 前端硬编码配置
+// src/config.ts
+export const APP_CONFIG = {
+  appName: '飞儿云平台',
+  version: 'v1.0.0',
+  environment: '开发环境',
+  database: 'PostgreSQL'
+};
+
+// BAD: 组件中硬编码数据
+// src/pages/dashboard/index.tsx
+const Dashboard = () => {
+  return (
+    <div>
+      <StatisticCard title="用户总数" value={1280} />
+      <StatisticCard title="服务器数量" value={98} />
+      
+      <ActivityLog activities={[
+        { time: '2023-03-24', description: '用户登录' },
+        { time: '2023-03-23', description: '系统维护' }
+      ]} />
+    </div>
+  );
+};
+```
+
+**正确做法**：
+- 所有配置信息应该从后端API获取
+- 所有展示数据应该通过API请求获取
+- 前端组件应该是纯展示组件，不包含业务数据
+
+```typescript
+// GOOD: 从API获取配置
+// src/api/config.ts
+export const fetchAppConfig = async (): Promise<AppConfig> => {
+  const response = await fetch('/api/config/app');
+  return response.json();
+};
+
+// GOOD: 组件使用API数据
+// src/pages/dashboard/index.tsx
+const Dashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [activities, setActivities] = useState([]);
+  
+  useEffect(() => {
+    // 加载数据
+    fetchDashboardData().then(setStats);
+    fetchActivities().then(setActivities);
+  }, []);
+  
+  return (
+    <div>
+      <StatisticCard title="用户总数" value={stats?.userCount} />
+      <StatisticCard title="服务器数量" value={stats?.serverCount} />
+      
+      <ActivityLog activities={activities} />
+    </div>
+  );
+};
+```
+
 ## 设计模式建议
 
 ### 1. 注册模式
@@ -183,3 +252,78 @@ export class OAuthStrategy implements AuthStrategy {
 - 单独测试核心层，不依赖特定应用
 - 测试应用层时，验证与核心层的集成
 - 使用模拟(mock)技术隔离测试环境 
+
+## DRY原则实现指南
+
+### 1. 配置集中管理
+
+**原则**：所有配置应该在单一位置定义，并通过API暴露给需要的组件。
+
+**实现方式**：
+- 后端：使用配置注册机制，应用向核心系统注册配置
+- 前端：前端不存储任何硬编码配置，通过API获取所有配置
+
+```typescript
+// 后端配置注册
+registerConfig('feieryun', 'app.info', {
+  name: '飞儿云平台',
+  version: '1.0.0',
+  database: 'PostgreSQL'
+});
+
+// 前端获取配置
+const [config, setConfig] = useState(null);
+useEffect(() => {
+  fetchAppConfig().then(setConfig);
+}, []);
+```
+
+### 2. UI与数据分离
+
+**原则**：UI组件应该只负责展示，不包含业务数据或逻辑。
+
+**实现方式**：
+- 创建纯展示组件，通过props接收数据
+- 使用容器组件负责数据获取和状态管理
+- 所有数据都应该来自API调用，不在前端硬编码
+
+```typescript
+// 纯展示组件
+const UserList = ({ users, onSelect }) => (
+  <List dataSource={users} renderItem={user => (
+    <List.Item onClick={() => onSelect(user)}>{user.name}</List.Item>
+  )} />
+);
+
+// 容器组件
+const UserListContainer = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetchUsers().then(setUsers);
+  }, []);
+  
+  return <UserList users={users} onSelect={handleSelect} />;
+};
+```
+
+### 3. 动态加载机制
+
+**原则**：系统应该能够动态发现和加载模块，而不是硬编码导入。
+
+**实现方式**：
+- 后端：使用文件系统扫描应用目录，自动注册发现的应用
+- 前端：使用动态导入和懒加载
+
+```typescript
+// 后端动态加载应用
+const appFolders = fs.readdirSync(appsDir);
+for (const appName of appFolders) {
+  if (fs.statSync(path.join(appsDir, appName)).isDirectory()) {
+    const app = require(`../apps/${appName}`).default;
+    registerApp(server, app);
+  }
+}
+
+// 前端动态导入
+const DynamicComponent = React.lazy(() => import(`./components/${componentName}`));
+``` 

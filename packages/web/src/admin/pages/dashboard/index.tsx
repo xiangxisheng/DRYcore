@@ -6,6 +6,7 @@ import StatisticCard from '../../../components/StatisticCard';
 import SystemInfo from '../../../components/SystemInfo';
 import ActivityLog from '../../../components/ActivityLog';
 import { fetchDashboardData, fetchSystemStatus, DashboardData, SystemStatus } from '../../../api/dashboard';
+import { fetchActivities } from '../../../api/config';
 
 const Dashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
@@ -17,24 +18,16 @@ const Dashboard: React.FC = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        // 并行请求数据
-        const [dashboardResult, statusResult] = await Promise.all([
+        // 并行请求所有数据
+        const [dashboardResult, statusResult, activitiesResult] = await Promise.all([
           fetchDashboardData(),
-          fetchSystemStatus()
+          fetchSystemStatus(),
+          fetchActivities()
         ]);
         
         setDashboardData(dashboardResult);
         setSystemStatus(statusResult);
-        
-        // 构建活动记录（实际项目中应该有专门的API获取活动日志）
-        const activityList = [
-          { time: '2023-03-24 10:30', description: '用户 admin 登录系统' },
-          { time: '2023-03-24 09:45', description: '创建了新服务器 web-01' },
-          { time: '2023-03-24 09:15', description: '数据库备份完成' },
-          { time: '2023-03-23 18:20', description: '系统例行维护' },
-          { time: '2023-03-23 15:10', description: '添加新域名 example.com' }
-        ];
-        setActivities(activityList);
+        setActivities(activitiesResult);
       } catch (error) {
         console.error('加载仪表板数据出错:', error);
       } finally {
