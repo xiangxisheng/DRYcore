@@ -33,6 +33,7 @@
     "zod": "^3.22.2",
     "swagger-ui-express": "^5.0.0",
     "yaml": "^2.3.4",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "bcrypt": "^5.1.1"
   },
@@ -43,6 +44,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.12",
     "@types/supertest": "^6.0.2",
+    "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "esbuild": "^0.18.0",

@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: DRYcore API
+  description: DRYcore框架API文档
+  version: 1.0.0
+  contact:
+    name: DRYcore团队
+    email: support@drycore.com
+
+servers:
+  - url: http://localhost:3000
+    description: 本地开发服务器
+  - url: https://api.drycore.com
+    description: 生产环境服务器
+
+tags:
+  - name: 系统
+    description: 系统相关API
+  - name: 配置
+    description: 配置管理API
+  - name: 用户
+    description: 用户管理API
+
+paths:
+  /api/system/status:
+    get:
+      summary: 获取系统状态
+      description: 返回系统运行状态信息
+      tags:
+        - 系统
+      responses:
+        200:
+          description: 成功返回系统状态
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /api/config/list:
+    get:
+      summary: 获取配置列表
+      description: 返回所有应用配置列表
+      tags:
+        - 配置
+      parameters:
+        - name: app
+          in: query
+          description: 应用名称
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: 成功返回配置列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigItem'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /api/config/register:
+    post:
+      summary: 注册配置
+      description: 注册新的应用配置
+      tags:
+        - 配置
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigRegistration'
+      responses:
+        201:
+          description: 配置注册成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    SystemStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [running, maintenance, error]
+          description: 系统状态
+        version:
+          type: string
+          description: 系统版本
+        uptime:
+          type: number
+          description: 系统运行时间（秒）
+        memory:
+          type: object
+          properties:
+            used:
+              type: number
+              description: 已使用内存（MB）
+            total:
+              type: number
+              description: 总内存（MB）
+      required:
+        - status
+        - version
+    
+    ConfigItem:
+      type: object
+      properties:
+        app:
+          type: string
+          description: 应用名称
+        key:
+          type: string
+          description: 配置键
+        value:
+          type: object
+          description: 配置值
+        updatedAt:
+          type: string
+          format: date-time
+          description: 最后更新时间
+      required:
+        - app
+        - key
+        - value
+    
+    ConfigRegistration:
+      type: object
+      properties:
+        app:
+          type: string
+          description: 应用名称
+        key:
+          type: string
+          description: 配置键
+        value:
+          type: object
+          description: 配置值
+      required:
+        - app
+        - key
+        - value
+    
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        message:
+          type: string
+          description: 成功消息
+      required:
+        - success
+    
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 错误消息
+            code:
+              type: string
+              description: 错误代码
+      required:
+        - success
+        - error
+  
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Unauthorized:
+      description: 未授权访问
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    ServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse' 

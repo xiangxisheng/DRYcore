@@ -1,5 +1,6 @@
 import { Context } from 'hono';
 import { Hono } from 'hono';
+import { MiddlewareHandler } from 'hono/types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { getDomainAppType } from '@/config/domain';
@@ -102,9 +103,11 @@ export function registerApp(server: Hono, app: AppModule): void {
 /**
  * 域名路由中间件
  * 根据请求域名路由到对应的应用
+ * 
+ * @returns Hono中间件处理函数
  */
-export function domainRoutingMiddleware() {
-  return async (c: Context, next: () => Promise<any>) => {
+export function domainRoutingMiddleware(): MiddlewareHandler {
+  return async (c, next) => {
     const host = c.req.header('host') || 'localhost';
     const { app, type } = getDomainAppType(host);
     

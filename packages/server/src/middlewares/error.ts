@@ -1,5 +1,13 @@
 import { Context, Next } from 'hono';
 
+// 声明Node.js环境变量类型
+declare const process: {
+  env: {
+    NODE_ENV: string;
+    [key: string]: string | undefined;
+  };
+};
+
 /**
  * 统一错误处理中间件
  * 捕获并处理请求处理过程中抛出的错误
