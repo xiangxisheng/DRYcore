@@ -1,1 +1,17 @@
- 
+{
+  "name": "@drycore/mobile",
+  "version": "0.1.0",
+  "description": "DRYcore mobile package",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Mobile app development not implemented yet'",
+    "build": "echo 'Mobile app build not implemented yet'",
+    "test": "echo 'Mobile app tests not implemented yet'",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.72.0",
+    "typescript": "^5.0.0"
+  }
+} 

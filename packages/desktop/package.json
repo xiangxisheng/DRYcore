@@ -1,5 +1,5 @@
 {
-  "name": "@drizzle-api/desktop",
+  "name": "@drycore/desktop",
   "version": "1.0.0",
   "private": true,
   "main": "dist/main.js",
@@ -25,8 +25,7 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "esbuild": "^0.20.1",
-    "esbuild-plugin-react": "^0.2.1",
-    "esbuild-plugin-typescript": "^0.1.0",
+    "esbuild-plugin-tsc": "^0.4.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
@@ -35,7 +34,7 @@
     "electron-builder": "^24.9.1"
   },
   "build": {
-    "appId": "com.drizzle-api.desktop",
+    "appId": "com.drycore.desktop",
     "productName": "DRYcore Desktop",
     "directories": {
       "output": "release"
